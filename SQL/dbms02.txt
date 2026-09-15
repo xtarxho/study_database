@@ -1,0 +1,54 @@
+1) 테이블 생성
+create table PERSON( 
+	--primary key(기본 키) : 중복을 허용해서는 안되는 고유한 식별자가 필요할때 사용하는 키워드
+	--candidate key(후보키) : id, name과 같이 기본키가 될 자격이 있는 컬럼들
+	id NUMBER(2) primary key,
+	name VARCHAR2(30)
+ );
+
+--테이블에 컬럼을 추가
+alter table PERSON add birth DATE;
+
+--컬럼명 수정
+alter table PERSON rename column birth to birthday;
+
+--컬럼속성 수정
+alter table PERSON modify name VARCHAR2(50) not null;
+
+--컬럼 삭제
+alter table PERSON drop column birthday;
+
+--테이블 삭제
+drop table PERSON;
+
+2) 테이블 생성 문제
+--id, pwd, name, email, phone를 저장하는 
+--회원테이블(member_t)을 만들어보자.
+--단, id는 기본키로 지정해야 하며, pwd와 name은 null을
+--허용하지 않도록 한다.
+
+number(3) -> 괄호 안이 3. 최대 3자리 수까지 저장가능
+varchar(50) -> 괄호 안이 50. 최대 50바이트까지 저장가능
+
+create table member_t( 
+	id NUMBER(3) primary key,
+	pwd NUMBER(6) not null,
+	name VARCHAR2(50) not null,
+	email VARCHAR2(50),
+	phone NUMBER(11)
+ );
+--수정
+alter table member_t modify pwd VARCHAR2(20);
+alter table member_t modify phone VARCHAR2(20);
+
+--member_t테이블에 회원가입날짜를 저장할 reg_date컬럼을 추가
+alter table member_t add reg_date DATE;
+alter table member_t rename column reg_date to reg_date;
+
+--이메일 컬럼의 크기를 100으로 수정하기
+--전화번호 저장 컬럼을 삭제하기
+alter table member_t modify email VARCHAR2(100);
+alter table member_t drop column phone;
+
+--member_t 테이블 삭제
+drop table member_t;
