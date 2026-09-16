@@ -127,3 +127,77 @@ where lower(first_name) = 'michael';
 select employee_id, first_name
 from employees
 where lower(first_name) like '%m%';
+
+-lpad() : 왼쪽의 자릿수를 늘리는 함수
+select lpad('good', 6, '#') from dual;
+select lpad('good', 8, '안녕') from dual;
+
+-rpad() : 오른쪽의 자릿수를 늘리는 함수
+select rpad('good', 6, '@') from dual;
+
+-ltrim() : 왼쪽의 문자를 지우는 함수
+select ltrim('helloh', 'h') from dual;
+
+-rtrim() : 오른쪽의 문자를 지우는 함수
+select rtrim('helloh', 'h') from dual;
+
+-substr() : 특정 문장을 잘라내는 함수
+select substr('good morning michael', 8, 4) from dual;
+select substr('good morning michael', 8) from dual;
+select substr('good morning michael', -4) from dual; 
+select substr('good morning michael', -7, 4) from dual;
+
+--이름, 입사연도만 출력
+select first_name, substr(hire_date, -4) year
+from employees;
+
+--이름, 전화번호, 전화번호 마지막 4자리를 조회
+select first_name, phone_number, substr(phone_number, -4) back
+from employees;
+
+--모든 사원의 사번, 이름, 가린이름 순으로 출력
+(이름의 앞 세굴자만 표기 뒷부분은 *로 변경)
+select employee_id, first_name,
+rpad(substr(first_name, 1, 3), 5, '*') result
+from employees;
+
+-replace() : 원하는 문자를 교체하는 함수
+select replace('good morning', 'morning', 'night') from dual;
+
+-length() : 문자열의 길이를 가져오는 함수
+select length('hi') from dual;
+
+--이름의 길이가 6을 초과하는 사원들만 사번, 이름을 출력
+select employee_id, first_name
+from employees
+where length(first_name) > 6;
+
+--전화번호의 길이가 13자 이상인 사원들의 이름, 전화번호를 조회
+select first_name, phone_number
+from employees
+where length(phone_number) >= 13;
+
+-concat() : 문자열을 연결하는 함수
+select concat('hello', 'hi') from dual;
+
+-|| : 문자열을 연결하는 연산자
+select 'hello' || 'hi' from dual;
+
+--사원의 이름과 성을 +로 이어붙여서 조회
+select first_name || '+' || last_name fullname
+from employees;
+또는
+select concat(concat(first_name, '+'), last_name) fullname
+from employees;
+
+-instr() : 특정 문자열의 위치를 찾아 반환하는 함수
+select first_name, instr(first_name, 'ar') inx
+from employees;
+
+--이름의 마지막 2글자를 **로 대체하여 이름, 가린이름 순으로 출력
+select first_name, rpad(substr(first_name, length(first_name)-2),length(first_name) , '*') hide
+from employees;
+
+--이름의 앞 한글자를 제외한 나머지 글자를 *로 대체하여 이름, 가린이름 순으로 출력
+select first_name, rpad(substr(first_name,1,1),length(first_name),'*') hide
+from employees;

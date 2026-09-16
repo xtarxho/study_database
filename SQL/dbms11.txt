@@ -1,0 +1,74 @@
+1) group by절
+-그룹함수와 함께 사용하여 특정 컬럼이나 값을 기준으로 레코드를 묶어 자료를 관리하고자 할 때 사용한다.
+
+select job_id, count(*)
+from employees
+group by job_id;
+
+--매니저별 관리중인 직원수를 조회
+select manager_id, count(*)
+from employees
+group by manager_id;
+
+--각 부서별 급여의 평균과 총액을 조회
+평균은 소수점 한자리까지만 보이도록 반올림
+select department_id, count(*),
+round(avg(salary), 1) avg, 
+sum(salary) sum
+from employees
+group by department_id;
+
+--직종별 급여의 합과 평균을 조회
+select job_id, count(*), sum(salary) sum, avg(salary) avg
+from employees
+group by job_id;
+
+--부서번호, 직종별 급여의 합을 출력하되 부서번호가 낮은순으로 정렬
+select department_id, job_id, count(*), sum(salary) sum
+from employees
+group by department_id, job_id
+order by department_id;
+
+--각 부서별로 가장 높은 월급, 가장 낮은 월급을 조회
+select department_id, max(salary) max, min(salary) min
+from employees
+group by department_id;
+
+--부서별 급여의 합을 출력
+--급여의 합이 큰 부서부터 정렬
+select department_id, sum(salary) sum
+from employees
+group by department_id
+order by sum DESC;
+
+--부서별, 직종별 급여의 총 합, 평균 급여를 조회
+--부서번호 낮은 순, 인원수가 많은 부서 순으로 정렬
+select department_id, job_id, count(*), 
+sum(salary) sum, round(avg(salary), 1) avg
+from employees
+group by department_id, job_id
+order by department_id, count(*) DESC;
+
+---숙제---
+1) 각 부서별, 직종별 인원수를 출력
+직종이 man으로 끝나는 직종만 조회
+select department_id, job_id, count(*)
+from employees
+where job_id like '%MAN'
+group by department_id, job_id;
+
+2) 02 ~ 06년 입사자의 수를 연도별로 조회
+
+
+
+
+
+
+
+
+
+
+
+
+
+

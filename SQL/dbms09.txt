@@ -1,0 +1,112 @@
+4) 날짜함수
+-months_between() : 특정날짜로부터 경과한 개월수
+-add_months() : x개월 뒤의 날짜를 가져온다
+** sysdate : 오늘날짜를 가져오는 키워드
+
+
+select sysdate from dual;
+
+--2025년 09월 16일로부터 오늘까지 경과한 개월수
+select months_between(sysdate, '09/16/2025') from dual;
+
+--입사일로부터 오늘까지 몇개월이 경과했는지 이름, 입사일, 경과한 개월수 순으로 출력
+select first_name, hire_date, 
+months_between(sysdate, hire_date) month
+from employees;
+
+--입사기간이 220개월 이상인 사원들의 이름, 입사일, 입사개월수, 입사년수 순으로 출력
+(입사개월수는 소수점아래 모두 버림, 입사년수는 소수점 1자리에서 반올림)
+select first_name, hire_date, trunc(months_between(sysdate, hire_date) ) month, round(months_between(sysdate, hire_date) / 12, 1) || '년' year
+from employees
+where months_between(sysdate, hire_date) >= 220;
+
+--오늘 날짜로부터 3개월 뒤의 날짜를 출력
+select sysdate, add_months(sysdate, 3) month from dual;
+
+--모든 사원들의 이름, 입사일, 입사일로부터 6개월 후의 날짜를 출력
+select first_name, hire_date, add_months(hire_date, 6) month
+from employees;
+
+--직종이 sa_rep인 사원들의 이름, 직종, 입사일, 입사일로부터 2년 후 날짜를 출력
+select first_name, job_id, hire_date, add_months(hire_date, 24) year
+from employees
+where job_id = 'SA_REP';
+
+--120번 사원이 입사 후 3년 6개월째 되는 날 퇴사를 했다. 이 사원의 사번, 이름, 입사일, 퇴사일을 조회
+select employee_id, first_name, hire_date, add_months(hire_date, 42) result
+from employees
+where employee_id = 120;
+
+-to_char() : 포멧에 맞게 날짜나 시간을 출력시켜 주는 함수
+1. 날짜형식 모델
+scc : 세기
+yyyy, yy : 년도
+mm : 월
+dd : 일
+month, mon : 월명
+day : 요일
+select to_char(sysdate, 'yyyy/mm/dd') from dual;
+select to_char(sysdate, 'yy-mm-dd') from dual;
+select to_char(sysdate, 'scc yy/mm/dd month day') from dual;
+
+2. 시간형식 모델
+am, pm : 정오지시자
+HH, HH12, HH24 : 시
+MI : 분
+SS : 초
+select to_char(sysdate, 'day - am HH:MI:SS') from dual;
+
+--월요일에 입사한 사람들의 이름, 입사일, 요일을 조회
+select first_name, hire_date, to_char(hire_date, 'day') day
+from employees
+where trim(to_char(hire_date, 'day')) = 'monday';
+
+--이름, 월급, 보너스의 실수령액을 조회
+(보너스를 받지 않는 사원의 실수령액을 0으로 표기)
+select first_name, salary, 
+nvl(commission_pct, 0) * salary bonus
+from employees;
+
+-rank() over() : 순위를 매겨주는 함수
+--사번, 이름, 월급, 월급이 많은 사람부터 순위를 매겨서 출력
+select employee_id, first_name, salary, rank() over(order by salary DESC) salary_rank
+from employees
+order by salary_rank;
+
+--입사일이 빠른사람부터 순위를 지정
+사번, 이름, 입사일, 입사일 순위를 조회
+사번이 빠른 순으로 정렬
+select employee_id, first_name, hire_date, rank() over(order by hire_date) hire_rank
+from employees
+order by employee_id;
+
+--급여가 5000이상인 사원들의 사번, 이름, 급여, 급여순위를 조회하고 급여가 낮은 순으로 순위를 매겨서 작은 순위부터 정렬하여 출력
+select employee_id, first_name, salary, rank() over(order by salary) salary_rank
+from employees
+where salary >= 5000
+order by salary_rank;
+
+--보너스를 받는 사원들을 대상으로 커미션 비중이 높은 순서대로 순위를 매겨서 사번, 이름, 보너스, 순위 순으로 조회
+select employee_id, first_name, commission_pct, rank() over(order by commission_pct DESC) bonus_rank
+from employees
+where commission_pct is not null;
+
+--사번, 이름, 월급, 입사일, 월급 많이 받는 순위, 입사일 빠른 순위를 매기고 월급순위의 오름차순 정렬순으로 조회
+select employee_id, first_name, salary, hire_date, 
+rank() over(order by salary DESC) salary_rank, 
+rank() over(order by hire_date) hire_rank
+from employees
+order by salary_rank;
+
+
+
+
+
+
+
+
+
+
+
+
+
