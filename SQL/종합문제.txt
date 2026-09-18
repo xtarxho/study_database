@@ -1,0 +1,11 @@
+1. 사원번호가 126인 사람의 이름, 입사일자, 부서번호를 출력
+select first_name, hire_date, department_id
+from employees
+where employee_id = 126;
+
+2. 부서번호가 10번인 직원의 부서번호, 사번, 이름, 급여를 출력
+select department_id, employee_id, first_name, salary
+from employees
+where department_id = 10;
+
+3. 사원테이블의 전체 사원의 평균 임금보다 많은(초과) 사원의 사원번호, 이름, 부서명, 입사일, 급여를 급여오른차순으로 출력
