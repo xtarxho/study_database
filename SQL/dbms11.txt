@@ -69,6 +69,3 @@ group by department_id, job_id;
 
 
 
-
-
-

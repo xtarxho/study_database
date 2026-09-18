@@ -1,0 +1,100 @@
+1) insert : 데이터 베이스에 값 넣기
+create table TEACHER(
+	id number(3) primary key,
+	nickname varchar2(20) not null unique,
+	name varchar2(20) not null,
+	gender varchar2(10) not null
+);
+
+--자원추가 해보기
+insert into TEACHER(id, nickname, name, gender)
+values(1, 'hong1', '홍길동', '남');
+
+--nickname컬럼의 속성을 변경
+alter table TEACHER modify nickname varchar2(20) null;
+
+--자원추가하기
+insert into TEACHER(id, name, gender)
+values(2, '김유비', '여자');
+
+insert into TEACHER
+values(3, 'kim', '김관우', '남자');
+
+insert into TEACHER
+values(4, null, '오장비', '여자');
+
+--불가능
+insert into TEACHER
+values(5, '주여포', '남자');
+
+insert into TEACHER values(6, 'cho', '김초선', '여자');
+insert into TEACHER values(7, 'joo', '염주유', '남자');
+commit; --DB의 변경사항을 물리적으로 설정
+--HR계정 잠금 해제
+alter user HR identified by 1111 account unlock;
+
+--테이블 삭제
+drop table TEACHER;
+
+--유저정보를 저장하는 User테이블을 생성
+1. 일련번호를 의미하는 idx
+2. 이름, 나이, 전화번호, 알게된 날짜(오늘 날짜)
+create table My_USER(
+	idx number(3) primary key,
+	name varchar2(20) not null,
+	age number(3),
+	phone varchar2(20),
+	meetDate date
+);
+
+insert into My_USER values(1, '김유비', 30, '010-111-1111', sysdate);
+commit;
+
+drop table my_user;
+
+--employees테이블을 연습용 테이블에 복사
+create table EMPL
+AS select * from employees;
+
+select * from empl;
+
+--사번이 999번이고, 이름이 "홍길동" 성이 "Hong"인 사원을 추가
+insert into empl(employee_id, first_name, last_name, email, hire_date, job_id) 
+values(999, '홍길동', 'Hong', 'hong@a.com', sysdate, 'IT_PROG');
+commit;
+
+--사번997, 이름 '영희', 성 '이', 월급 6000, 오늘 입사함
+insert into empl(last_name, email, hire_date, job_id, salary, first_name, employee_id)
+values('이', 'younghee@a.com', sysdate, 'IT_PROG', 6000, '영희', 997);
+commit;
+
+--사번994, 이름 '장비', 성 '익덕', 월급 7000, 보너스 0.1, 부서번호 80
+insert into empl(last_name, email, hire_date, job_id, employee_id, first_name, salary, commission_pct, department_id)
+values('익덕', 'jang@a.com', sysdate, 'IT_PROG', 994, '장비', 7000, 0.1, 80);
+commit;
+
+select * from empl
+where employee_id >= 900;
+
+--사번 998, 이름 유비, 성 현덕, 이메일 ubi@a.com, 전화 010-111-1111, 입사일 오늘, 직종 IT_PROG, 급여 8000, 보너스 없음, 상사번호 103, 부서번호 60
+insert into empl values(998, '유비', '현덕', 'ubi@a.com', '010-111-1111', sysdate, 'IT_PROG', 8000, null, 103, 60);
+
+delete from empl;
+commit;
+
+롤백 단위 
+minute : 분
+hour : 시
+day : 일
+
+insert into empl select * from empl 
+as of timestamp(systimestamp - interval '10' minute);
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,35 @@
 1) Select 구문 : DB에 저장되어 있는 자원들을 검색할 때 사용
 
+-계정이 소유하고 있는 테이블 목록 보기
+select * from tabs;
+
+-사원테이블 조회하기
+Select * from employees;
+
+-사원테이블에서 사원들의 이름, 성을 조회
+Select first_name, last_name
+from employees;
+
+-부서테이블의 부서번호, 부서명을 조회
+Select department_id, department_name
+From departments;
+
+-사원테이블에서 사번, 입사일, 월급순으로 조회
+Select employee_id, hire_date, salary
+From employees;
+
+--별칭
+Select employee_id, first_name myname
+From employees;
+
+--사번, 이름, 직종을 출력하되 별칭을 한글로 지정해서 조회하기
+select employee_id "사번", first_name "이름", job_id "직종"
+from employees;
+
+—사번, 이름, 직종, 급여, 보너스를 조회
+select employee_id, first_name, job_id, salary, commission_pct
+from employees;
+
 --사번, 이름, 직종, 급여, 보너스, 보너스의 실제 금액을 조회
 select employee_id,
 	 first_name,
