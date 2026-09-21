@@ -15,5 +15,33 @@ join departments d on e.department_id = d.department_id
 where salary > (select avg(salary) from employees e )
 order by salary;
 
-4. 30번 부서의 급여보다 많이 받는(초과) 직원들 중에서 가장 적은 급여를 받는 직원들의 이름과 급여를 출력
+---복습---
+4. 30번 부서의 평균 급여보다 많이 받는(초과) 직원들 중에서 가장 적은 급여를 받는 직원들의 이름과 급여를 출력
+select first_name, salary
+from employees
+where salary = (select min(salary) from employees where salary > (select avg(salary) from employees where department_id = 30)); 
+
+5. employees 테이블에서 급여를 많이 받는 순서대로 조회했을 때 6번째부터 10번째까지 5명의 last_name, first_name, salary를 조회
+select ranking, last_name, first_name, salary
+from (
+    select rank() over(order by salary desc) ranking,
+           last_name,
+           first_name,
+           salary
+    from employees
+)
+where ranking between 6 and 10;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
