@@ -58,7 +58,18 @@ where job_id like '%MAN'
 group by department_id, job_id;
 
 2) 02 ~ 06년 입사자의 수를 연도별로 조회
+select substr(hire_date, -4) || '년도' hire_year, count(*) emp_cnt
+from employees
+where substr(hire_date, -4) between '2002' and '2006'
+group by substr(hire_date, -4)
+order by hire_year;
 
+select sum(decode(substr(hire_date, -2), '02', 1, 0)) "2002"
+sum(decode(substr(hire_date, -2), '03', 1, 0)) "2003"
+sum(decode(substr(hire_date, -2), '04', 1, 0)) "2004"
+sum(decode(substr(hire_date, -2), '05', 1, 0)) "2005"
+sum(decode(substr(hire_date, -2), '06', 1, 0)) "2006"
+from employees;
 
 
 

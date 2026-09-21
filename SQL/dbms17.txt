@@ -1,0 +1,140 @@
+1) 시퀀스 : 연속적인 번호를 만들어주는 기능
+형식) 
+	create sequence 시퀀스 이름
+	start with 시작값
+	increment by 증가값
+	maxvalue 최대값
+	minvalue 최소값
+	cache / nocache 
+
+create sequence serial_seq
+start with 10
+increment by 2
+
+create table goods(
+	no number(3) primary key,
+	name varchar2(50)	
+);
+
+--nexval -> 다음값을 출력
+insert into goods
+values(serial_seq.nextval, '제품2');
+
+--현재 나의 시퀀스 번호
+select serial_seq.currval
+from dual;
+
+create sequence student_seq;
+
+create table student(
+	idx number(3) primary key,
+	name varchar2(20),
+	major varchar2(20),
+	age number(3)
+);
+
+insert into student
+values(student_seq.nextval, '김유비', '화학과', 20);
+insert into student
+values(student_seq.nextval, '박장비', '화학과', 21);
+insert into student
+values(student_seq.nextval, '김민수', '컴퓨터공학과', 24);
+insert into student
+values(student_seq.nextval, '이서연', '경영학과', 22);
+insert into student
+values(student_seq.nextval, '최준호', '전자공학과', 25);
+insert into student
+values(student_seq.nextval, '정하은', '간호학과', 21);
+insert into student
+values(student_seq.nextval, '강민재', '기계공학과', 23);
+insert into student
+values(student_seq.nextval, '윤지우', '국어국문학과', 20);
+insert into student
+values(student_seq.nextval, '장도윤', '수학과', 26);
+insert into student
+values(student_seq.nextval, '임서현', '영어영문학과', 22);
+insert into student
+values(student_seq.nextval, '한지훈', '체육학과', 24);
+insert into student
+values(student_seq.nextval, '오유진', '화학과', 23);
+insert into student
+values(student_seq.nextval, '서준영', '컴퓨터공학과', 21);
+insert into student
+values(student_seq.nextval, '신예은', '경영학과', 25);
+insert into student
+values(student_seq.nextval, '권도현', '전자공학과', 22);
+insert into student
+values(student_seq.nextval, '황수빈', '간호학과', 20);
+insert into student
+values(student_seq.nextval, '조현우', '기계공학과', 27);
+insert into student
+values(student_seq.nextval, '배지민', '수학과', 23);
+insert into student
+values(student_seq.nextval, '문채원', '영어영문학과', 21);
+insert into student
+values(student_seq.nextval, '류현석', '체육학과', 26);
+insert into student
+values(student_seq.nextval, '노아름', '국어국문학과', 24);
+commit;
+
+--student테이블의 학생정보를 한 페이지에 5명씩 보이도록 페이징 처리
+select * from
+(
+select rank() over(order by idx DESC) no, s.*
+from student s
+)
+where no between 1 and 5;
+
+2) view : 조회를 목적으로 하는 가상의 테이블로서의 역할을 한다
+--사번, 입사일, 직종, 상사번호, 부서번호만을 조회하기 위한 view 생성
+create or replace view My_empl(empno, hire, job, mgr, deptno) AS 
+select employee_id, hire_date, job_id, manager_id, department_id
+from employees;
+
+select * from My_empl;
+
+--사원들의 이름, 급여, 급여+10000의 결과를 조회하는 view
+create or replace view my_empl AS 
+select first_name, salary, salary+10000 res 
+from employees;
+
+--성적관리 테이블
+create table score(
+	id number(3) primary key,
+	name varchar2(30) not null,
+	kor number(3) not null,
+	eng number(3) not null,
+	math number(3) not null
+);
+
+create sequence seq_scoreid;
+
+insert into score
+values(seq_scoreid.nextval, '김길순', 70, 90, 90);
+
+--score_view라는 이름으로 id, 이름, 국어, 영어, 수학, 총점, 평균을 조회하는 view를 생성
+create or replace view score_view AS
+select id, name, kor, eng, math, kor + eng + math total, 
+trunc((kor + eng + math) / 3) avg,
+rank() over(order by kor+eng+math DESC) rank
+from score;
+
+select * from score_view;
+
+--사번, 풀네임, 직종, 직종명(job_title), 급여, 부서명을 조회하는 view를 만들기
+create or replace view emp_view AS
+select e.employee_id, e.first_name || ' ' || e.last_name fullname, e.job_id, j.job_title, e.salary, d.department_name
+from employees e
+join jobs j on e.job_id = j.job_id
+join departments d on e.department_id = d.department_id;
+
+select * from emp_view;
+
+
+
+
+
+
+
+
+

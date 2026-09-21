@@ -1,3 +1,60 @@
+1)subquery : 특정 sql문 안에 또 다른 sql문장이 포함되어 있는 형태
+
+--서브쿼리를 사용할 수 있는 곳
+1. where절, having절 뒤에 넣을 수 있다
+2. from절 뒤에 넣을 수 있다 -> select나 delete
+3. update문의 set
+4. insert문의 into 뒤에 사용 가능
+
+--사원 이름이 Michael이고, 직종이 mk_man인 사원보다 월급을 많이 받은(초과) 사원들의 정보를 사번, 이름, 직종, 급여순으로 조회
+
+--문제 접근1)
+--이름이 마이클이고 직종이 mk_man인 사원의 급여 -> 13000
+select salary
+from employees 
+where first_name = 'Michael' and job_id = 'MK_MAN';
+
+--문제 접근 2)
+--13000을 초과하는 급여를 받는 사원들의 정보
+select employee_id, first_name, job_id, salary
+from employees
+where salary > 13000;
+
+--위의 두 select문 합치기
+select employee_id, first_name, job_id, salary
+from employees
+where salary > (select salary
+from employees 
+where first_name = 'Michael' and job_id = 'MK_MAN');
+
+--회사에서 월급을 가장 많이받는 사원의 사번, 이름, 월급을 조회
+select employee_id, first_name, salary
+from employees
+where salary = (select max(salary) from employees);
+
+--150번 사원과 같은 월급을 받는 모든 사원들의 정보를 사번, 이름, 급여순으로 출력
+select employee_id, first_name, salary
+from employees
+where salary = (select salary from employees where employee_id = 150);
+
+--Bruce와 같은 부서에서 근무중인 사원들의 사번, 이름을 출력
+select employee_id, first_name
+from employees
+where department_id = (select department_id from employees where first_name = 'Bruce');
+
+--111번 사원과 같은 직종이면서 159번 사원의 급여를 초과하는 사원들의 정보를 사번, 이름, 직종, 입사일, 급여순으로 조회
+select employee_id, first_name, job_id, hire_date, salary
+from employees
+where job_id = (select job_id from employees where employee_id = 111) 
+and salary > (select salary from employees where employee_id = 159);
+
+--직종별 급여의 평군을 출력 
+평균 급여가 Bruce의 급여를 초과하는 경우만 출력
+select job_id, avg(salary)
+from employees
+having avg(salary) > (select salary from employees where first_name = 'Bruce')
+group by job_id;
+
 ---숙제---
 유럽지역 사원들의 평균 급여보다 많이받는(초과) 사원들의 이름, 급여, 지역을 조회
 select e.first_name, e.salary, r.region_name
@@ -107,8 +164,6 @@ select rank() over(order by employee_id ) no, e.*
 from employees e 
 )
 where no between 11 and 20;
-
-
 
 
 

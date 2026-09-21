@@ -8,4 +8,12 @@ select department_id, employee_id, first_name, salary
 from employees
 where department_id = 10;
 
-3. 사원테이블의 전체 사원의 평균 임금보다 많은(초과) 사원의 사원번호, 이름, 부서명, 입사일, 급여를 급여오른차순으로 출력
+3. 사원테이블의 전체 사원의 평균 임금보다 많은(초과) 사원의 사원번호, 이름, 부서명, 입사일, 급여를 급여오름차순으로 출력
+select e.employee_id, e.first_name, d.department_name, e.hire_date, e.salary
+from employees e
+join departments d on e.department_id = d.department_id
+where salary > (select avg(salary) from employees e )
+order by salary;
+
+4. 30번 부서의 급여보다 많이 받는(초과) 직원들 중에서 가장 적은 급여를 받는 직원들의 이름과 급여를 출력
+
