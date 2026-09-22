@@ -1,0 +1,48 @@
+1. 이름에 e가 포함된 모든 사원의 정보를 출력하시오.
+select * from employees
+where first_name like '%e%';
+
+2. 이름이 'Michael'인 사원들이 근무하는 부서명을 출력하시오.
+select e.first_name, e.department_id, d.department_name
+from employees e
+join departments d on e.department_id = d.department_id
+where e.first_name = 'Michael';
+
+3. 이름이 'Lex'인 사원이 속해있는 부서의 모든 사람의 사원번호, 이름, 입사일, 급여를 출력하시오.
+select employee_id, first_name, hire_date, salary
+from employees
+where department_id = (select department_id from employees where first_name = 'Lex');
+
+4. 'Neena' 또는 'Bruce'의 급여와 같은 사원의 사원번호, 이름, 급여를 출력하시오.
+select employee_id, first_name, salary
+from employees
+where salary in (select salary from employees where first_name in ('Neena', 'Bruce'));
+
+5. 각 도시에 있는 모든부서 직원들의 평균급여를 조회하고자 한다. 평균급여가 가장 낮은 도시부터 도시명과 평균급여, 해당 도시의 직원 수를 출력하시오. 단, 도시에 근무하는 직원이 10명 이상인 곳은 제외하고 조회하시오.
+select l.city, avg(e.salary), count(*)
+from employees e
+join departments d on e.department_id = d.department_id
+join locations l on d.location_id = l.location_id
+group by l.city
+having count(*) < 10
+order by avg(e.salary);
+
+6. 부서별 직원들의 최대, 최소, 평균급여를 조회하되 평균급여가 'IT'부서의 평균급여보다 많고(초과) 'Sales'부서의 평균급여보다 적은(미만) 부서 정보만 출력하시오.
+select d.department_name, max(e.salary) max, min(e.salary) min, round(avg(e.salary)) avg
+from employees e
+join departments d on e.department_id = d.department_id
+group by d.department_name
+having avg(e.salary) > (select avg(e.salary) from employees e 
+join departments d on e.department_id = d.department_id
+where d.department_name = 'IT') 
+and avg(e.salary) < (select avg(e.salary) from employees e 
+join departments d on e.department_id = d.department_id
+where d.department_name = 'Sales');
+
+
+
+
+
+
+
+
